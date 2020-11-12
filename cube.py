@@ -7,6 +7,7 @@ from util import get_available_moves
 # noinspection DuplicatedCode,PyPep8
 class Cube:
 
+    # generate id for cube, by its look
     def get_id(self):
         id_str = ""
         for edge in self.edges:
@@ -17,16 +18,20 @@ class Cube:
                 id_str += val.value
         return id_str
 
+    # get solved copy of cube
     def get_solved_cube(self):
         return self.solved_cube
 
+    # check if cube is solved
     def is_solved(self):
         solved_cube = self.get_solved_cube()
         return self.edges == solved_cube.edges and self.corners == solved_cube.corners
 
+    # apply single move on cube
     def apply_move(self, move):
         self.apply_notation([move])
 
+    # apply series of moves on cube
     def apply_notation(self, moves):
         if type(moves) is not list:
             raise Exception("Moves must be a list containing moves")
@@ -56,6 +61,8 @@ class Cube:
         for move in moves:
             move_to_execute = switcher.get(move, None)
             move_to_execute()
+
+    # define all the moves on cube
 
     def d(self):
         self.edges[8], self.edges[11], self.edges[10], self.edges[9] = \
@@ -201,8 +208,11 @@ class Cube:
         self.r()
         self.r()
 
+    # generate unreferenced copy of cube in current state
     def get_copy(self):
         return copy.deepcopy(self)
+
+    # initialize the cube
 
     def __init__(self):
         self.edges = []

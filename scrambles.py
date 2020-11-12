@@ -16,5 +16,15 @@ scrambles = ["F2 D B2 U' F2 L2 U2 R2 U B2 L2 D' R B U L2 B D2 L F2 L",
              "U' L B' F' U' B' U2 B2 D B U2 F' D U R D2 U R B U F' U B' D' R' D' L D2 R D"]
 
 
+# some random official wca scrambles
 def get_scrambles():
     return scrambles
+
+
+# return scramble with given index
+def get_scramble(i):
+    if i is None or type(i) is not int:
+        raise Exception("Parameter must be Integer")
+    if i < 0 or i >= len(get_scrambles()):
+        raise Exception("Parameter must be between 0 and " + str(len(get_scrambles()) - 1) + ", was " + str(i))
+    return get_scrambles()[i].lower().split()

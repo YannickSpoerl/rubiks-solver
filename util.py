@@ -1,21 +1,15 @@
 import random
 
 from color import Color
-from scrambles import get_scrambles
+from scrambles import get_scrambles, get_scramble
 
 
-def get_scramble(i):
-    if i is None or type(i) is not int:
-        raise Exception("Parameter must be Integer")
-    if i < 0 or i >= len(get_scrambles()):
-        raise Exception("Parameter must be between 0 and " + str(len(get_scrambles()) - 1) + ", was " + str(i))
-    return get_scrambles()[i].lower().split()
-
-
+# get a random offical wca scramble
 def get_random_scramble():
     return get_scramble(random.randint(0, len(get_scrambles()) - 1))
 
 
+# generate random (non-wca) scramble with given length
 def get_random_scramble_by_length(length):
     if length is None or type(length) is not int or length <= 0:
         raise Exception("Length must be valid int")
@@ -26,6 +20,7 @@ def get_random_scramble_by_length(length):
     return scramble
 
 
+# format list of moves to str
 def scramble_to_str(scramble):
     if scramble is None or type(scramble) is not list:
         raise Exception("Scramble must be list of strings")
@@ -40,6 +35,7 @@ def scramble_to_str(scramble):
     return scramble_as_str
 
 
+# get all moves possible on cube
 def get_available_moves():
     valid_moves = []
     for valid_move in ["r", "l", "f", "b", "u", "d"]:
@@ -49,6 +45,7 @@ def get_available_moves():
     return valid_moves
 
 
+# print a cube to terminal
 def print_cube(cube):
     if cube is None:
         raise Exception("Parameter must be a valid cube")
@@ -121,12 +118,14 @@ def print_cube(cube):
     print("             _____________")
 
 
+# check if two edges are the same
 def edges_are_equal(edge1, edge2):
     if not edge_valid(edge1) or not edge_valid(edge2):
         raise Exception("Edges invalid")
     return (edge1[0] == edge2[0] and edge1[1] == edge2[1]) or (edge1[0] == edge2[1] and edge1[1] == edge2[0])
 
 
+# check if two corners are the same
 def corners_are_equal(corner1, corner2):
     if not corner_valid(corner1) or not corner_valid(corner2):
         raise Exception("Corners invalid")
@@ -146,6 +145,7 @@ def corners_are_equal(corner1, corner2):
     return False
 
 
+# check if edge could exist on real cube
 def edge_valid(edge):
     if edge is None:
         raise Exception("Edge must not be None")
@@ -163,6 +163,7 @@ def edge_valid(edge):
     return True
 
 
+# check if corner could exist on real cube
 def corner_valid(corner):
     if corner is None:
         raise Exception("Corner must not be None")
@@ -186,6 +187,7 @@ def corner_valid(corner):
     return False
 
 
+# invert move
 def inverse_move(move):
     if move is None:
         return None
