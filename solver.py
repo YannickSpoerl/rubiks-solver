@@ -83,9 +83,8 @@ class Solver:
                 setup.append(possible_move)
                 self.find_all_possible_matches(cube_copy, depth - 1, setup, matches)
 
-    # TODO: allow traingin for optimal solutions
     # for every length generate unkown scrambles and try to solve cube, persist all solved cubes and solved scrambles
-    def train(self, start_length=TRAIN_START_LENGTH, end_length=TRAIN_UNTIL_LENGTH, cases=TRAIN_CASES):
+    def train(self, start_length=TRAIN_START_LENGTH, end_length=TRAIN_UNTIL_LENGTH, cases=TRAIN_CASES, optimal=False):
         successful_trainings = 0
         print("Start training...")
         for i in range(start_length, end_length + 1):
@@ -99,7 +98,7 @@ class Solver:
                     successful_trainings_by_length = cases
                     break
                 random_cube.apply_notation(scramble)
-                training_success = self.try_to_solve(random_cube)
+                training_success = self.try_to_solve(random_cube, optimal)
                 if training_success:
                     self.persist_scramble(scramble)
                     successful_trainings_by_length += 1
@@ -166,12 +165,14 @@ class Solver:
             self.already_solved_cubes = pickle.load(file)
             return
 
+    # TODO: shorten moves
     # write all solved-cubes to file
     def save_solution(self, cube_to_solve, solution):
         self.already_solved_cubes[cube_to_solve.get_id()] = solution
         with open(DB_FILE_NAME, 'wb') as file:
             pickle.dump(self.already_solved_cubes, file)
 
+    # TODO: shorten moves
     # write all known-scrambles to file
     def persist_scramble(self, scramble):
         if not len(scramble) in self.known_scrambles:
