@@ -2,7 +2,7 @@ import os
 import pickle
 
 from cube import Cube
-from util import get_available_moves, get_random_scramble_by_length, scramble_to_str
+from util import get_available_moves, scramble_to_str
 
 # specify names of files
 DB_FILE_NAME = ".db"
@@ -114,19 +114,26 @@ class Solver:
         for key in self.known_scrambles.keys():
             print("Length " + str(key) + ": " + str(len(self.known_scrambles.get(key))) + "/" + str(18**key))
 
-    # TODO: gets stuck on high numbers of known scrambles, make not-random
-    # if all scrambles of length are know, abort, else try to generate unknown scramble with length
+    # if all scrambles of length are known, abort, else try to generate unknown scramble with length
     def find_unknown_scramble(self, length):
         if self.known_scrambles.get(length) is None:
             self.known_scrambles[length] = []
         if len(self.known_scrambles.get(length)) is 18**length:
             return None
-        scramble = None
-        while scramble is None:
-            possible_scramble = get_random_scramble_by_length(length)
-            if scramble_to_str(possible_scramble) not in self.known_scrambles.get(length):
-                scramble = possible_scramble
-        return scramble
+        return self.find_unknown_scramble_recursively(length, [])
+
+    def find_unknown_scramble_recursively(self, depth, pre_moves):
+        if depth is 0:
+            if scramble_to_str(pre_moves) not in self.known_scrambles[len(pre_moves)]:
+                return pre_moves
+            return None
+        for move in get_available_moves():
+            new_pre_moves = []
+            new_pre_moves.extend(pre_moves)
+            new_pre_moves.append(move)
+            scramble = self.find_unknown_scramble_recursively(depth - 1, new_pre_moves)
+            if scramble is not None:
+                return scramble
 
     # initialized the solver
     def __init__(self):
