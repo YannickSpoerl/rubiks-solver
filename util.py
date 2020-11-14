@@ -14,10 +14,44 @@ def get_random_scramble_by_length(length):
     if length is None or type(length) is not int or length <= 0:
         raise Exception("Length must be valid int")
     scramble = []
-    moves = get_available_moves()
     for i in range(0, length):
+        moves = []
+        moves.extend(get_available_moves())
+        if len(scramble) > 0:
+            moves.remove(inverse_move(scramble[len(scramble) - 1]))
         scramble.append(moves[random.randint(0, len(moves) - 1)])
-    return scramble
+    return shorten_scramble(scramble)
+
+
+# remove unnecessary moves from scramble
+def shorten_scramble(scramble):
+    stripped_scramble = []
+    i = 1
+    while i <= len(scramble):
+        if i == len(scramble):
+            stripped_scramble.append(scramble[i - 1])
+            break
+        move = scramble[i]
+        previous_move = scramble[i - 1]
+        if move == inverse_move(previous_move):
+            i += 2
+        elif move == previous_move:
+            stripped_scramble.append(move[0] + "2")
+            i += 2
+        elif move[0] == previous_move[0]:
+            if (len(move) is 2 and move[1] == "2" and len(previous_move) is 1) or (
+                    len(previous_move) is 2 and previous_move[1] == "2" and len(move) is 1):
+                stripped_scramble.append(move[0] + "'")
+            elif (len(move) is 2 and move[1] == "2" and len(previous_move) is 2) or (
+                    len(previous_move) is 2 and previous_move[1] == "2" and len(move) is 2):
+                stripped_scramble.append(move[0])
+            i += 2
+        else:
+            stripped_scramble.append(previous_move)
+            i += 1
+    if len(stripped_scramble) < len(scramble):
+        return shorten_scramble(stripped_scramble)
+    return stripped_scramble
 
 
 # format list of moves to str

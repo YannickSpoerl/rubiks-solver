@@ -2,7 +2,7 @@ import os
 import pickle
 
 from cube import Cube
-from util import get_available_moves, scramble_to_str
+from util import get_available_moves, scramble_to_str, shorten_scramble
 
 # specify names of files
 DB_FILE_NAME = ".db"
@@ -165,14 +165,12 @@ class Solver:
             self.already_solved_cubes = pickle.load(file)
             return
 
-    # TODO: shorten moves
     # write all solved-cubes to file
     def save_solution(self, cube_to_solve, solution):
-        self.already_solved_cubes[cube_to_solve.get_id()] = solution
+        self.already_solved_cubes[cube_to_solve.get_id()] = shorten_scramble(solution)
         with open(DB_FILE_NAME, 'wb') as file:
             pickle.dump(self.already_solved_cubes, file)
 
-    # TODO: shorten moves
     # write all known-scrambles to file
     def persist_scramble(self, scramble):
         if not len(scramble) in self.known_scrambles:
