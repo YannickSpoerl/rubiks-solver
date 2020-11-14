@@ -23,12 +23,11 @@ class Solver:
     # try to find cube in neighbourhood, solve by:
     # transforming current cube into known cube
     # solve known cube by known solution
-    # TODO: make search-depth parameter
-    def try_to_solve(self, cube_to_solve, best_solution=False):
+    def try_to_solve(self, cube_to_solve, best_solution=False, depth=SEARCH_DEPTH):
         if cube_to_solve is None or type(cube_to_solve) is not Cube:
             raise Exception("Parameter must be a valid cube")
         if not best_solution:
-            success, setup, key = self.find_possible_match(cube_to_solve, SEARCH_DEPTH, [])
+            success, setup, key = self.find_possible_match(cube_to_solve, depth, [])
             if not success:
                 return False, None
             setup.extend(self.already_solved_cubes.get(key))
@@ -36,7 +35,7 @@ class Solver:
             return True, setup
         else:
             matches = []
-            self.find_all_possible_matches(cube_to_solve, SEARCH_DEPTH, [], matches)
+            self.find_all_possible_matches(cube_to_solve, depth, [], matches)
             best_match = None
             best_match_length = None
             for match in matches:
