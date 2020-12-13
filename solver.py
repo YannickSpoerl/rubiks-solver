@@ -31,8 +31,9 @@ class Solver:
             if not success:
                 return False, None
             setup.extend(self.already_solved_cubes.get(key))
-            self.save_solution(cube_to_solve, setup)
-            return True, setup
+            short_solution = shorten_scramble(setup)
+            self.save_solution(cube_to_solve, short_solution)
+            return True, short_solution
         else:
             matches = []
             self.find_all_possible_matches(cube_to_solve, depth, [], matches)
